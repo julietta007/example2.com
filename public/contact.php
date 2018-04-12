@@ -40,24 +40,25 @@ if(!empty($input)) {
  if(empty($valid->errors)){
 
   require '../vendor/autoload.php';
-
+  require '../../config.php';
   //use Mailgun/Mailgun;
 
-  $mgClient = new Mailgun\Mailgun('key-a3b56ec2577076860f249f8282a2f702');
-  $domain = "sandbox9f9689058863482484e42d257e2d5e28.mailgun.org";
+  $mgClient = new Mailgun\Mailgun(MG_KEY);
+  $domain = MG_DOMAIN;
 
   $result = $mgClient->sendMessage(
     $domain, 
     [
       'from'=>"Mailgun Sandbox <postmaster@{$domain}>",
       'to'=>'Julietta Hensgen <juliettaurdiales@yahoo.com>',
-      'Subject'=>$input['subject'],
-      'text'=>$input['message']
+      'subject'=>$input['subject'],
+      'text'=>"<b>Name</b>: {$input['name']}<br><br>" .
+      "<b>Email</b>: {$input['email']}<br><br>" .
+      "<b>Message</b><br>{$input['message']}"
     ]
   );
-
-var_dump($result);
- // header('LOCATION: thanks.html');
+    
+  header('LOCATION: thanks.html');
 }else{
   $message = "<div class=\"message-error\">The form has errors!</div>";
  }
@@ -92,7 +93,7 @@ var_dump($result);
 
     <?php echo (!empty($message)?$message:null); ?>
 
-    <form action="contact.php" method="$input">
+    <form action="contact.php" method="POST">
       
       <input type="hidden" name="subject" value="New submission">
       
