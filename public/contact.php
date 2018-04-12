@@ -38,7 +38,26 @@ if(!empty($input)) {
   $valid->check($input);
 
  if(empty($valid->errors)){
-  header('LOCATION: thanks.html');
+
+  require '../vendor/autoload.php';
+
+  //use Mailgun/Mailgun;
+
+  $mgClient = new Mailgun\Mailgun('key-a3b56ec2577076860f249f8282a2f702');
+  $domain = "sandbox9f9689058863482484e42d257e2d5e28.mailgun.org";
+
+  $result = $mgClient->sendMessage(
+    $domain, 
+    [
+      'from'=>"Mailgun Sandbox <postmaster@{$domain}>",
+      'to'=>'Julietta Hensgen <juliettaurdiales@yahoo.com>',
+      'Subject'=>$input['subject'],
+      'text'=>$input['message']
+    ]
+  );
+
+var_dump($result);
+ // header('LOCATION: thanks.html');
 }else{
   $message = "<div class=\"message-error\">The form has errors!</div>";
  }
